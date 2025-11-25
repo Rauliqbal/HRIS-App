@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Departments {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(100)
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  employees Employees[]
+
+  @@map("department")
+}
+
+model Positions {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employees Employees[]
+
+  @@map("positions")
+}
+
+model roles {
+  id         String   @id
+  name       String   @db.VarChar(50)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employees      Employees[]
+  approval_flows ApprovalFlows[]
+
+  @@map("roles")
+}
+
+// EMPLOYEES
+
+model Employees {
+  id             Int      @id @default(autoincrement())
+  full_name      String   @db.VarChar(150)
+  email          String   @unique @db.VarChar(150)
+  password       String   @db.VarChar(150)
+  phone          String?  @unique @db.VarChar(50)
+  hire_date      DateTime?
+  status         String   @db.VarChar(50) @default("STAF")
+  signature_path String?  @db.VarChar(255)
+  department_id  Int?
+  position_id    Int?
+  roles_id       String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  department Departments? @relation(fields: [department_id], references: [id])
+  position   Positions?   @relation(fields: [position_id], references: [id])
+  role       roles?       @relation(fields: [roles_id], references: [id])
+
+  reimburse_requests ReimburseRequest[]
+  spj_trips          SpjTrips[]
+  asset_loans        AssetLoans[]
+  approval_records   ApprovalRecords[]
+
+  @@map("employees")
+}
+
+model ReimburseRequest {
+  id           Int      @id @default(autoincrement())
+  employee_id  Int
+  amount       Decimal  @db.Decimal(12, 2)
+  description  String?
+  request_date DateTime
+  status       String   @db.VarChar(50)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employee Employees @relation(fields: [employee_id], references: [id])
+
+  @@map("reimburse_request")
+}
+
+model SpjTrips {
+  id          Int      @id @default(autoincrement())
+  employee_id Int
+  destination String   @db.VarChar(255)
+  purpose     String?
+  start_date  DateTime
+  end_date    DateTime
+  status      String   @db.VarChar(50)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employee Employees @relation(fields: [employee_id], references: [id])
+
+  @@map("spj_trips")
+}
+
+model AssetLoans {
+  id          Int       @id @default(autoincrement())
+  asset_id    Int
+  employee_id Int
+  loan_date   DateTime
+  return_date DateTime?
+  status      String    @db.VarChar(50)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employee Employees @relation(fields: [employee_id], references: [id])
+
+  @@map("asset_loans")
+}
+
+// APPROVAL SYSTEM
+
+model ApprovalFlows {
+  id         Int    @id @default(autoincrement())
+  module     String @db.VarChar(50) // REIMBURSE, SPJ, ASSET
+  step_order Int
+  role_id    String
+  label      String @db.VarChar(100)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  role roles @relation(fields: [role_id], references: [id])
+
+  approval_records ApprovalRecords[]
+
+  @@map("approval_flows")
+}
+
+model ApprovalRecords {
+  id          Int    @id @default(autoincrement())
+  module      String @db.VarChar(50)
+  record_id   Int
+  step_order  Int
+  approver_id Int
+
+  signature_path String? @db.VarChar(255)
+  status         String  @db.VarChar(50)
+  note           String?
+
+  approved_at DateTime?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  approver Employees @relation(fields: [approver_id], references: [id])
+
+  files         ApprovalFiles[]
+  approvalFlows ApprovalFlows[]
+
+  @@map("approval_records")
+}
+
+model ApprovalFiles {
+  id          Int      @id @default(autoincrement())
+  approval_id Int
+  file_path   String   @db.VarChar(255)
+  created_at  DateTime @default(now())
+
+  approval ApprovalRecords @relation(fields: [approval_id], references: [id])
+
+  @@map("approval_files")
+}
