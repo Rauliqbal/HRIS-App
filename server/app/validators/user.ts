@@ -7,3 +7,10 @@ export const register = vine.compile(
     password: vine.string().trim(),
   })
 )
+
+export const login = vine.compile(
+  vine.object({
+    email: vine.string().trim().email(),
+    password: vine.string().trim()
+  })
+)
