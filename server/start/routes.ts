@@ -10,6 +10,7 @@
 import AuthController from '#controllers/auth_controller'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+import DepartmentsController from '#controllers/departments_controller'
 
 router
   .group(() => {
@@ -31,6 +32,8 @@ router
         router
           .group(() => {
             router.get('/me', [AuthController, 'me'])
+
+            router.post('/department', [DepartmentsController, 'createDepartment'])
           })
           .use(middleware.auth({ guards: ['api'] }))
       })
