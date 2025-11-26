@@ -33,6 +33,7 @@ router
           .group(() => {
             router.get('/me', [AuthController, 'me'])
 
+            router.get('/department', [DepartmentsController, 'getAllDepartment'])
             router.post('/department', [DepartmentsController, 'createDepartment'])
           })
           .use(middleware.auth({ guards: ['api'] }))

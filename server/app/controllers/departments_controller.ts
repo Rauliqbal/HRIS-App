@@ -26,4 +26,14 @@ export default class DepartmentsController {
       data: department,
     })
   }
+
+  async getAllDepartment({ response }: HttpContext) {
+    const department = await Department.all()
+
+    return response.status(200).json({
+      success: true,
+      message: 'List Department',
+      data: department,
+    })
+  }
 }
