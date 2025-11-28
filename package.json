@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm-run-all --parallel dev:server dev:client",
-    "dev:server": "npm --prefix server run start:dev",
+    "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev"
   },
   "author": "",
