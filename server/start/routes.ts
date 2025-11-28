@@ -35,6 +35,8 @@ router
 
             router.get('/department', [DepartmentsController, 'getAllDepartment'])
             router.post('/department', [DepartmentsController, 'createDepartment'])
+            router.get('/department/:id', [DepartmentsController, 'getDetailDepartment'])
+            router.delete('/department/:id', [DepartmentsController, 'deleteDepartment'])
           })
           .use(middleware.auth({ guards: ['api'] }))
       })
