@@ -9,7 +9,7 @@ export default class AuthController {
 
     const checkUser = await User.findBy('email', request.input('email'))
     if (checkUser) {
-      return response.json({ message: 'Email sudah terdaftar' })
+      return response.status(204).json({ message: 'Email sudah terdaftar' })
     }
 
     const user = await User.create({

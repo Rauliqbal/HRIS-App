@@ -8,8 +8,9 @@ export default class DepartmentsController {
     const { name, description } = request.only(['name', 'description'])
 
     const checkDepartment = await Department.findBy('name', name)
+    // Cek jika department sudah ada
     if (checkDepartment) {
-      return response.status(401).json({
+      return response.status(204).json({
         success: false,
         message: 'Department sudah ada',
       })
