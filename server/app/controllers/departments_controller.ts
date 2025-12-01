@@ -38,39 +38,39 @@ export default class DepartmentsController {
     })
   }
 
-  async getDetailDepartment({request, response}:HttpContext) {
+  async getDetailDepartment({ request, response }: HttpContext) {
     const id = request.param('id')
 
     const department = await Department.findBy('id', id)
 
     // cek jika  gada
-    if(!department) {
+    if (!department) {
       return response.status(404).json({
-        messages: "Department Not Found"
-      })
-    }else {
-      return response.status(200).json({
-        success: true,
-        message: `Get Detail Department ${department.name}!`,
-        data: department
-      })
-    }
-  }
-
-  async deleteDepartment({request,response} :HttpContext) {
-    const id = request.param('id')
-
-    const department = await Department.findBy('id', id)
-
-    // cek jika gada 
-    if(!department) {
-      return response.status(404).json({
-        messages: "Department Not Found"
+        messages: 'Department Not Found',
       })
     } else {
       return response.status(200).json({
         success: true,
-        message: `Deleteted ${department.name} successfully!`
+        message: `Get Detail Department ${department.name}!`,
+        data: department,
+      })
+    }
+  }
+
+  async deleteDepartment({ request, response }: HttpContext) {
+    const id = request.param('id')
+
+    const department = await Department.findBy('id', id)
+
+    // cek jika gada
+    if (!department) {
+      return response.status(404).json({
+        messages: 'Department Not Found',
+      })
+    } else {
+      return response.status(200).json({
+        success: true,
+        message: `Deleteted ${department.name} successfully!`,
       })
     }
   }

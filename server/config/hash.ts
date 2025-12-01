@@ -12,7 +12,7 @@ const hashConfig = defineConfig({
       parallelism: 4,
       saltSize: 16,
       hashLength: 32,
-    })
+    }),
     // scrypt: drivers.scrypt({
     //   cost: 16384,
     //   blockSize: 8,

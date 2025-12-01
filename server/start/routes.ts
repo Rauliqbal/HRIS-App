@@ -7,11 +7,11 @@
 |
 */
 
-import AuthController from '#controllers/auth_controller'
+const AuthController = () => import('#controllers/auth_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
-import DepartmentsController from '#controllers/departments_controller'
-import RolesController from '#controllers/roles_controller'
+const DepartmentsController = () => import('#controllers/departments_controller')
+const RolesController = () => import('#controllers/roles_controller')
 
 router
   .group(() => {
@@ -42,6 +42,7 @@ router
                 router.post('', [DepartmentsController, 'createDepartment'])
                 router.get('/:id', [DepartmentsController, 'getDetailDepartment'])
                 router.delete('/:id', [DepartmentsController, 'deleteDepartment'])
+                // router.put('/:id', [DepartmentsController, 'up'])
               })
               .prefix('/department')
 
@@ -49,8 +50,20 @@ router
             router
               .group(() => {
                 router.post('/', [RolesController, 'createRole'])
+                router.get('/', [RolesController, 'getAllRole'])
+                router.get('/:id', [RolesController, 'getDetailRole'])
+                router.put('/:id', [RolesController, 'updateRole'])
+                router.delete('/:id', [RolesController, 'deleteRole'])
               })
               .prefix('/role')
+
+            router.group(() => {
+              // router.post('/', [])
+              // router.get('/', [])
+              // router.get('/:id', [])
+              // router.put('/:id', [])
+              // router.delete('/:id', [])
+            })
           })
           .use(middleware.auth({ guards: ['api'] }))
       })
